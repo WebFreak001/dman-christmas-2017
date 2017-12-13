@@ -1,0 +1,10 @@
+.dub
+docs.json
+__dummy.html
+*.o
+*.obj
+/d-man-santa*
+dub.selections.json
+*~
+docFolder/
+*.kra-autosave*
