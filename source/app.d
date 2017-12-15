@@ -686,6 +686,10 @@ void main(string[] args)
 
 		fps.wait();
 	}
+
+	import core.stdc.stdlib;
+
+	exit(0);
 }
 
 void drawUI(IRenderTarget target)
