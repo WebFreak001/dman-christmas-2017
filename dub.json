@@ -1,6 +1,6 @@
 {
 	"name": "d-man-santa",
 	"dependencies": {
-		"d2dgame": "~>2.0.4"
+		"d2dgame": "~>2.1.0"
 	}
 }
