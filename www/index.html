@@ -9,6 +9,7 @@
 	<style>
 		html {
 			font-family: Roboto, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+			font-size: 14pt;
 			background-color: #efefef;
 		}
 
@@ -21,9 +22,8 @@
 			max-width: 600px;
 		}
 
-		h1,
-		h2 {
-			text-align: center;
+		p {
+			line-height: 2em;
 		}
 
 		img {
@@ -37,28 +37,107 @@
 		a.soon {
 			color: rgba(0, 0, 0, 0.5);
 		}
+
+		h1 {
+			text-align: center;
+			font-size: 4em;
+			font-weight: 300;
+			margin: 64px 0;
+		}
+
+		h2 {
+			font-size: 2em;
+			font-weight: 400;
+		}
+
+		.platform_disclaimer {
+			font-size: 0.5em;
+			color: rgba(0, 0, 0, 0.5);
+		}
+
+		.disclaimer {
+			font-size: 0.8em;
+			color: rgba(0, 0, 0, 0.5);
+		}
+
+		a.download {
+			display: block;
+			width: 150px;
+			text-align: center;
+			margin: 16px auto;
+			padding: 32px;
+			background-color: #f0f0f0;
+			color: black;
+			text-shadow: 0 -1px 0 white;
+			text-decoration: none;
+			border-radius: 16px;
+			font-size: 1.3em;
+			box-shadow: 0 7px 20px rgba(0, 0, 0, 0.5);
+			transition: background-color 0.2s ease-out;
+		}
+
+		a.source {
+			display: block;
+			width: 120px;
+			text-align: center;
+			margin: 32px auto;
+			padding: 8px;
+			background-color: #f0f0f0;
+			color: black;
+			text-shadow: 0 -1px 0 white;
+			text-decoration: none;
+			border-radius: 4px;
+			font-size: 0.9em;
+			box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+			transition: background-color 0.2s ease-out;
+		}
+
+		a.download:hover,
+		a.source:hover {
+			background-color: #e0e0e0;
+		}
+
+		a.download svg {
+			width: 80px;
+			display: block;
+			margin: 8px auto;
+		}
 	</style>
 </head>
 
 <body>
-	<h1>DMan Santa / D言語くんサンタさん</h1>
+	<h1>DMan Santa</h1>
 	<img src="https://wfr.moe/fQq8gS.png" alt="Picture of DMan Santa" />
-	<h2>Download / ダウンロード</h2>
-	<ul>
-		<li>
-			<a href="https://i.wfr.moe/fQqSPv/d-man-santa.zip">linux x86_64 (requires sdl2, sdl2image)</a>
-		</li>
-		<li>
-			<a class="soon">Windows (Coming Soon, Compile it yourself for now)</a>
-		</li>
-		<li>
-			<a href="https://github.com/WebFreak001/dman-christmas-2017">Source Code</a>
-		</li>
-	</ul>
 
-	<p>
-		Requires OpenGL 3.2 - if you use mesa on an extremely old GPU you can use <code>env LIBGL_ALWAYS_SOFTWARE=1 ./d-man-santa</code>
+	<p class="description">
+		DMan Santa is an open source modern retro-graphics game about the
+		<a href="https://dlang.org">D Programming Language</a> Mascot 'D-Man' which gained popularity all over the world in the last few years.
 	</p>
+	<p class="description">
+		In this Game you are D-Man Santa and your goal is to deliver as many presents as possible while avoiding the obstacles.
+		<b>Hold down Left Mouse Button</b> to charge your present and to throw it.
+	</p>
+	<p class="description">
+		You can share your score on Twitter using the Tweet button ingame. Press Escape to Pause/Unpause.
+	</p>
+
+	<h2>Download</h2>
+	<a href="https://wfr.moe/fQ7WtG/d-man-santa-x86_64.zip" class="download">
+		<svg viewBox="0 0 24 24">
+			<path fill="#000000" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+		</svg>
+		Download Now
+	</a>
+	<a href="https://github.com/WebFreak001/dman-christmas-2017" class="source">Source Code</a>
+
+	<p class="disclaimer">
+		Requires SDL2, SDL2_image and OpenGL 3.2
+		<br>if you use mesa on an extremely old GPU you might want to use
+		<br>
+		<code>env LIBGL_ALWAYS_SOFTWARE=1 ./d-man-santa</code>
+	</p>
+
+	<p class="platform_disclaimer">Download is x86_64 linux build, other Platforms are in the works</p>
 </body>
 
 </html>
