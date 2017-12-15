@@ -14,6 +14,8 @@ enum minY = 84;
 enum maxX = 192;
 enum maxY = 130;
 
+bool paused;
+
 struct ActiveObstacle
 {
 	vec2 pos;
@@ -34,7 +36,7 @@ Window window;
 
 pragma(inline, true) double speed()
 {
-	if (dman.failed && dman.failFrame >= 0.999)
+	if (paused || dman.failed && dman.failFrame >= 0.999)
 		return 0;
 	return pow(cast(double) frames + 2000, 0.41) / 32.0 * (dman.failed ? 1 - dman.failFrame : 1);
 }
@@ -346,6 +348,8 @@ struct Input
 				s = false;
 			else if (event.key == SDLK_d)
 				d = false;
+			else if (event.key == SDLK_ESCAPE)
+				paused = !paused;
 			velocity = vec2((a * -1) + (d * 1), (w * -1) + (s * 1));
 			break;
 		case Event.Type.MouseButtonPressed:
@@ -578,15 +582,17 @@ void main(string[] args)
 		}
 		window.clear(0x43 / cast(float) 0xFF, 0xa4 / cast(float) 0xFF, 0x2e / cast(float) 0xFF);
 
-		frames++;
+		if (!paused)
+			frames++;
 
-		if (!dman.failed && frames % maxFps == 0)
+		if (!paused && !dman.failed && frames % maxFps == 0)
 			scoreNumber++;
 
-		dman.move(input.velocity);
+		if (!paused)
+			dman.move(input.velocity);
 
 		int aimFrame;
-		if (!dman.failed)
+		if (!dman.failed && !paused)
 		{
 			if (input.shooting)
 			{
@@ -639,29 +645,32 @@ void main(string[] args)
 		{
 			scope (exit)
 				i--;
-			gift.start -= movement;
-			gift.goal -= movement;
-			if ((gift.start - gift.goal).length_squared <= 1)
+			if (!paused)
 			{
-				road.impact(gift.goal.x, gift.goal.y);
-				gifts[i] = gifts[$ - 1];
-				gifts.popBack();
-				continue;
+				gift.start -= movement;
+				gift.goal -= movement;
+				if ((gift.start - gift.goal).length_squared <= 1)
+				{
+					road.impact(gift.goal.x, gift.goal.y);
+					gifts[i] = gifts[$ - 1];
+					gifts.popBack();
+					continue;
+				}
+				vec2 dir = gift.goal - gift.start;
+				auto lenSq = dir.length_squared;
+				enum giftSpeed = 0.8f;
+				if (lenSq > giftSpeed * giftSpeed)
+					dir = dir / sqrt(lenSq) * giftSpeed;
+				gift.start += dir;
 			}
-			vec2 dir = gift.goal - gift.start;
-			auto lenSq = dir.length_squared;
-			enum giftSpeed = 0.8f;
-			if (lenSq > giftSpeed * giftSpeed)
-				dir = dir / sqrt(lenSq) * giftSpeed;
 			matrixStack.push();
 			matrixStack.top = matrixStack.top * mat4.translation(gift.start.x,
 					gift.start.y - gift.z * gift.origDist * 0.2, 0);
 			giftRect.draw(window);
 			matrixStack.pop();
-			gift.start += dir;
 		}
 
-		if (!dman.failed)
+		if (!dman.failed && !paused)
 		{
 			matrixStack.push();
 			matrixStack.top = matrixStack.top * mat4.translation(input.aim.x, input.aim.y, 0);
