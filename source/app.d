@@ -506,6 +506,8 @@ void main(string[] args)
 	bool fullscreen, blurry;
 	auto info = args.getopt("scale|s", &scale, "fullscreen|f", &fullscreen,
 			"blurry|b", &blurry, "speed|r", &maxFps);
+	if (maxFps > 300)
+		maxFps = 300;
 	if (info.helpWanted)
 	{
 		defaultGetoptPrinter("dman-santa-san", info.options);
