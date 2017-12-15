@@ -7,6 +7,75 @@ import std.traits;
 
 import core.exception;
 
+struct CyclicRange(T)
+{
+	T[] array;
+	size_t start, size;
+
+	auto save()
+	{
+		return this;
+	}
+
+	bool empty() @nogc @safe @property const
+	{
+		return size == 0;
+	}
+
+	void popFront()
+	{
+		if (size == 0)
+			throw staticError!CyclicRangeError("trying to pop an empty array", __FILE__, __LINE__);
+		static if (hasElaborateDestructor!T)
+			destroy(array[start]);
+		start = (start + 1) % array.length;
+		size--;
+	}
+
+	ref auto front() @nogc @safe @property inout
+	{
+		if (size == 0)
+			throw staticError!CyclicRangeError("trying to call front on empty array", __FILE__, __LINE__);
+		return array[start];
+	}
+
+	void popBack()
+	{
+		if (size == 0)
+			throw staticError!CyclicRangeError("trying to pop an empty array", __FILE__, __LINE__);
+		size--;
+		static if (hasElaborateDestructor!T)
+			destroy(array[(start + size) % array.length]);
+	}
+
+	ref auto back() @property
+	{
+		if (size == 0)
+			throw staticError!CyclicRangeError("trying to call back on empty array", __FILE__, __LINE__);
+		return array[(start + size - 1) % array.length];
+	}
+
+	auto back() @property const
+	{
+		if (size == 0)
+			throw staticError!CyclicRangeError("trying to call back on empty array", __FILE__, __LINE__);
+		return array[(start + size - 1) % array.length];
+	}
+
+	size_t opDollar() @nogc @safe const
+	{
+		return size;
+	}
+
+	ref inout(T) opIndex(size_t v) inout
+	{
+		if (v >= size)
+			throw staticError!CyclicRangeError("out of range", __FILE__, __LINE__);
+		else
+			return array[(v + start) % array.length];
+	}
+}
+
 /// @nogc array without memory management using a cyclic array internally
 /// Should be treated like a static array when no len is set (copies on assignment)
 /// The maximum capacity is static and by default so many elements that it fills at most 4KiB, but at least 8 elements (even if that is more than 4KiB).
@@ -242,16 +311,6 @@ public:
 		size++;
 	}
 
-	void popFront()
-	{
-		if (size == 0)
-			throw staticError!CyclicRangeError("trying to pop an empty array", __FILE__, __LINE__);
-		static if (hasElaborateDestructor!T)
-			destroy(array[start]);
-		start = (start + 1) % array.length;
-		size--;
-	}
-
 	static if (len == 0)
 	{
 		CyclicArray!(T, len) dup() const
@@ -274,6 +333,14 @@ public:
 		}
 	}
 
+	static if (len != 0)
+	{
+		auto byRef()
+		{
+			return CyclicRange!T(array[], start, size);
+		}
+	}
+
 	auto save()
 	{
 		return this;
@@ -282,6 +349,16 @@ public:
 	bool empty() @nogc @safe @property const
 	{
 		return size == 0;
+	}
+
+	void popFront()
+	{
+		if (size == 0)
+			throw staticError!CyclicRangeError("trying to pop an empty array", __FILE__, __LINE__);
+		static if (hasElaborateDestructor!T)
+			destroy(array[start]);
+		start = (start + 1) % array.length;
+		size--;
 	}
 
 	ref auto front() @nogc @safe @property inout
@@ -951,7 +1028,7 @@ unittest
 	assert(a.length == 10);
 	assert(a.capacity >= a.length);
 	immutable cap = a.capacity;
-	foreach (ref e; a)
+	foreach (ref e; a.byRef)
 		e.x = 10;
 	a.length = 5;
 	assert(a.length == 5);
