@@ -6,7 +6,7 @@ import std.conv;
 import std.getopt;
 import std.random;
 
-float scale = 2;
+float scale = 4;
 int maxFps = 240;
 
 enum minX = 0;
