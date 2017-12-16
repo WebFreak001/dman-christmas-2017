@@ -482,6 +482,7 @@ RectangleShape retryButton;
 void clickRetry()
 {
 	score = 0;
+	scoreNumber = 0;
 	frames = 0;
 	scoreParticles.clear();
 	dman.reset();
