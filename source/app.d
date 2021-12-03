@@ -6,6 +6,8 @@ import std.conv;
 import std.getopt;
 import std.random;
 
+import gl3n.linalg;
+
 float scale = 4;
 int maxFps = 240;
 
@@ -522,7 +524,7 @@ void main(string[] args)
 		flags |= WindowFlags.FullscreenAuto;
 
 	window = new Window(cast(int)(maxX * scale), cast(int)(128 * scale),
-			"D言語くんサンタさん", flags, DynLibs.image);
+			"D言語くんサンタさん", flags);
 
 	auto fps = new FPSLimiter(maxFps);
 

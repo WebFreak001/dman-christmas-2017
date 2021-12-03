@@ -1,6 +1,9 @@
 {
 	"name": "d-man-santa",
 	"dependencies": {
-		"d2dgame": "~>2.1.1"
-	}
+		"d2dgame": "~>3.0.0-beta.2"
+	},
+	"versions": [
+		"BindSDL_Image"
+	]
 }
